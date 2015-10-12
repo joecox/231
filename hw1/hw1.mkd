@@ -1,0 +1,206 @@
+---
+title: Homework 1 CS 231
+author: Joe Cox, Christian Gram Kalhauge
+header-includes:
+  - \usepackage{amsmath}
+  - \usepackage{amsfonts}
+  - \usepackage{amssymb}
+  - \usepackage{amsthm}
+  - \usepackage{cleveref}
+  - \usepackage{bcprules}
+  
+  - \newcommand{\stepsto}{\rightarrow}
+  - \newcommand{\subterm}{\sqsubset}
+  - \newcommand{\subderv}{\sqsubset}
+  
+  - \newcommand{\infr}[1]{({\textsc{#1}})}
+
+  - \newcommand{\tTrue}{\mathtt{true}}
+  - \newcommand{\tFalse}{\mathtt{false}}
+  - '\newcommand{\tIf}[3]{{\mathtt{if} \  #1 \  \mathtt{then} \  #2 \  \mathtt{else} \  #3}}'
+
+  - \newcommand{\Value}{\mathbb{V}}
+  - \newtheorem{theorem}{Theorem}
+...
+
+# Assignment 2 
+
+> *Given a subset of the language only containing booleans, prove that
+> terms always make progress, and never get **stuck**.*
+
+\begin{theorem}\label{progress}
+For every term, $t$ whether $t$ is a value ($\Value$) or there exists a
+term $t'$ such that $t \stepsto t'$.
+$$
+\forall t \not\in \Value: \exists t': t \stepsto t'
+$$
+\end{theorem}
+
+*Proof of \cref{progress} by structural induction*:
+First we denote the induction hypothesis. We use $\subterm$ to denote
+an term being a subterm of another term.
+\begin{equation}\label{IH-Progress}
+    \forall t_0 \not\in \Value \land t_0 \subterm t: 
+        \exists t_0': t_0 \stepsto t_0'
+\end{equation}
+
+By structural induction we consider the three cases of a term $t$:
+
+1. Case $t=\tTrue$: contradiction $t \in \Value$.
+
+2. Case $t=\tFalse$: contradiction $t \in \Value$.
+
+3. Case $t=\tIf{t_1}{t_2}{t_3}$: we do case analysis on $t_1$. 
+
+    1. Case $t_1=\tTrue$: Using \infr{E-IfTrue} we can see that there exists
+       a $t' = t_2$, from which we can se $t \stepsto t'$
+    
+    2. Case $t_1=\tFalse$: Analogous to $t_1=\tTrue$ using \infr{E-IfFalse}.
+    
+    3. Case $t_1=\tIf{.}{.}{.}$: This tells us that $t_1 \not\in \Value$.
+       We also know that $t_1 \subterm t$. From the induction hypothesis
+       \labelcref{IH-Progress}, we get that $t_1 \stepsto t_1'$.
+       Given this we can use the rule \infr{E-If} to see that $t$ steps.
+
+We have covered all cases of the term, and for all the cases the theorem
+holds. We have therefore proven \cref{progress}. 
+\begin{flushright}\qedsymbol\end{flushright}
+
+# Assignment 3
+
+> *Provide a new small-step semantics where the `then` and `else`
+> branches are calculated before the guard, and in that order.*
+
+\infrule[E-IfNewTrue]{}{\tIf{\tTrue}{v_1}{v_2} \stepsto v_1}
+\infrule[E-IfNewFalse]{}{\tIf{\tFalse}{v_1}{v_2} \stepsto v_2}
+\infrule[E-IfNewThen]{t_2 \stepsto t_2'}{\tIf{t_1}{t_2}{t_3} \stepsto \tIf{t_1}{t_2'}{t_3}}
+\infrule[E-IfNewElse]{t_3 \stepsto t_3'}{\tIf{t_1}{v_1}{t_3} \stepsto \tIf{t_1}{v_1}{t_3'}}
+\infrule[E-IfNew]{t_1 \stepsto t_1'}{\tIf{t_1}{v_1}{v_2} \stepsto \tIf{t_1'}{v_1}{v_2}}
+
+# Assignment 4
+
+> *Prove that the language defined in assignment 2 is deterministic.*
+
+\begin{theorem}\label{determinism}
+If $t \stepsto t'$ and $t \stepsto t''$ then $t' = t''$
+$$ \forall t, t', t'' : t \stepsto t' \land t \stepsto t'' \Rightarrow t' = t'' $$
+\end{theorem}
+
+*Proof by induction on the derivation $t \stepsto t'$*: First we denote
+the induction hypothesis, where $\subderv$ means the subderivation of
+the derivation.
+
+\begin{equation}\label{IH4}
+t_0 \stepsto t_0' \land t_0 \stepsto t_0'' \land (t_0 \stepsto t_0') \subderv
+(t \stepsto t') \implies  t_0' = t_0''
+\end{equation}
+
+We are doing case analysis over $t \stepsto t'$:
+
+1.  Case \infr{E-IfTrue}: $t = \tIf{\tTrue}{t_2}{t_3}$ and $t' = t_2$.
+    To prove $t'' = t_2$ for all $t''$, we use case analysis on the
+    derivation $t \stepsto t''$:
+     
+     1. Case \infr{E-If}: This does not fulfill the premise
+        $t_1 \stepsto t_1'$, because $\tTrue$ does not step.
+
+     2. Case \infr{E-IfFalse}: Does not pattern match. $\tTrue \neq \tFalse$.
+
+     3. Case \infr{E-IfTrue}: With $t = \tIf{\tTrue}{t_2}{t_3}$, then $t'' =
+        t_2$, and transitively $t' = t''$.
+
+2.  Case \infr{E-IfFalse}: Analogous to \infr{E-IfTrue}.
+
+3.  Case \infr{E-If}: $t = \tIf{t_1}{t_2}{t_3}$, and that $t' =
+    \tIf{t_1'}{t_2}{t_3}$, and that $t_1 \stepsto t_1'$. Also 
+    $(t_1 \stepsto t_1') \subderv (t \stepsto t')$.
+   
+    Doing case analysis on $t \stepsto t''$:
+
+    1.  Case \infr{E-IfTrue}: $t_1 = \tTrue$, contradiction, because
+        $\tTrue$ does not step.
+
+    2.  Case \infr{E-IfFalse}: Analogous to \infr{E-IfTrue}.
+
+    3.  Case \infr{E-If}: $t'' = \tIf{t_1''}{t_2}{t_3}$ and $t_1
+        \stepsto t_1''$.
+        
+        We can use the IH \labelcref{IH4}, to see that $t_1' = t_1''$,
+        because $(t_1 \stepsto t_1') \subderv (t \stepsto t')$ and $t_1
+        \stepsto t_1'$. and $t_1 \stepsto t_1''$. We can use this to
+        show $t' = t''$, because $t' = \tIf{t_1'}{t_2}{t_3}$, $t'' =
+        \tIf{t_1''}{t_2}{t_3}$, and $t_1' = t_1''$.
+
+We have covered all cases of the derivation, and for all the cases the theorem
+holds. We have therefore proven \cref{determinism}. 
+\begin{flushright}\qedsymbol\end{flushright}
+
+# Assignment 5
+
+> *Provide a BNF grammar that for a new metavariable $s$ that
+> characterizes exactly the stuck expressions.*
+
+~~~ {#stuckBNF} 
+b  ::= True | False
+ns ::= n | s
+s  ::= s + t | v + s | b + v | n + b
+     | s > t | v > s | b > v | n > b
+     | if ns then t else t 
+~~~
+
+The metavariable $b$ is a subset of $v$ representing only boolean values. The
+metavariable $ns$ represents either numbers or stuck expressions.
+
+Let us consider the cases for the metavariable $s$:
+
+1.  $s + t$ is stuck because there is no rule that can step $t$ before
+    $s$ and because $s$ cannot step.
+
+2.  $v + s$ is stuck because the only rule that might match is
+    \infr{E-Plus2}, but $s$ cannot step.
+
+3.  $b + v$ is stuck because there is no matching rule for the form.
+
+4.  $n + b$ is stuck for the same reason as (3).  This is not $v + b$
+    because this case is already covered by (3).
+
+5.  The GT forms are the same as the Plus forms.
+
+6.  The forms that might match \infr{E-If} but are stuck are those that
+    have either numbers or stuck expressions for $t_1$, because those do
+    not step. 
+
+# Assignment 6 {#other}
+
+> *Considering the original small-step sematics for the language of
+> booleans and integers, and modified version from Assignment 3*
+
+> a) *Are there any terms that are stuck in the original version that is not in
+> the new version.*
+
+Yes, $\tIf{1}{1+1}{\tTrue}$ is stuck in the original semantics, but is
+not stuck in the new version $\tIf{1}{1+1}{\tTrue} \stepsto \tIf{1}{2}{\tTrue}$,
+which then is stuck.
+
+> b) *Are there any terms that are stuck in the new version that are not in
+> the old version.*
+
+Yes, $\tIf{\tFalse}{\tTrue < 1}{\tTrue}$ is stuck in the new semantics,
+because the `then` branch is stepped before the rest of the term. In the
+old semantics is it a valid term that can evaluate to a value $\tTrue$.
+
+# Assignment 7 {#label}
+
+> *Considering the original small-step sematics for the language of
+> booleans and integers, and modified version from Assignment 3.*
+
+> a) *Are there any terms that is **eventually stuck** in the original version
+> that is not in the new version.*
+
+No. 
+
+> b) *Are there any terms that are **eventually stuck** in the new version
+> that are not in the old version.*
+
+Yes, same as in Assignment 6 b.
+
