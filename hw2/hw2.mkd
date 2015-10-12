@@ -159,3 +159,11 @@ For all case have we proven that we can build a derivation $t' \typeof
     Preservation is still valid as all the expressions that can step is
     able maintain their type. 
 
+# Assignment 4
+
+> *Consider again the language of just booleans and integers*:
+
+(a) 
+
+(b)  
+
