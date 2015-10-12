@@ -17,7 +17,7 @@ author: Joe Cox, Christian Gram Kalhauge
 
 > b) Add rules to the type system.
 
-\infrule[T-And]{t_1 \typeof \TBool \  t_2 \typeof \TBool}{\tAnd{t_2}{t_2} \typeof \TBool}
+\infrule[T-And]{t_1 \typeof \TBool \andalso t_2 \typeof \TBool}{\tAnd{t_2}{t_2} \typeof \TBool}
 
 > c) Provide a proof of progress. Assuming that it is performed by
 > induction on $t \typeof T$.
@@ -82,6 +82,7 @@ theorem.
 For all case have we proven that we can build a derivation $t' \typeof
 \TBool$, therefor all so proven \cref{thm:preservation}.
 
+
 # Assignment 2
 
 > a) Demonstrate that $\tAnd{t_1}{t_2}$ can be treated like syntactic
@@ -97,4 +98,64 @@ For all case have we proven that we can build a derivation $t' \typeof
    {t_2}
    {(\tIf{t_2}{\tFalse}{\tFalse})}
 }
+
+# Assignment 3
+
+(a) *Remove the rule \infr{E-IfFalse}:*
+    
+    Would invalidate progress, $\tIf{\tFalse}{\tTrue}{\tFalse}$ is
+    neither a value or can't step, but preservation would be kept because
+    the term can't step.
+
+(b) *Add the following axiom to the type system:*
+
+    \infrule[]{}{0 \typeof bool}
+
+    This type rule would invalidate the boolean Canonical Form
+    (\cref{lem:canonicalBool}), transitively invalidating the progress
+    theorem. $\tIf{0}{\tFalse}{\tTrue} \typeof \TBool$, but would not be
+    able to step. $0$ does not step, and do therefor not effect
+    preservation.
+
+(c) *Add the following axiom:*
+
+    \infrule[]{}{\tIf{t_1}{t_2}{t_3} \stepsto t_2}
+
+    The new rule will introduce nondeterminism in the operational
+    semantics, but would not effect neither progress or preservation.
+
+(d) *Add the following rules:*
+    
+    \infrule[]{}{\tPlus{\tFalse}{\tFalse} \stepsto \tFalse}
+    
+    \infrule[]{}{\tPlus{\tTrue}{\tTrue} \stepsto \tTrue}
+
+    \infrule[]{
+        t_1 \typeof \TBool \andalso t_2 \typeof \TBool
+        }{
+        \tPlus{t_1}{t_2} \typeof \TInt
+        } 
+    
+    Progess is not preserved in the cases where the booleans do not
+    match $\tPlus{\tTrue}{\tFalse} : \TInt$. Even though it does type
+    check, it does not step.
+    
+    Also preservation is not preserved, as the
+    $\tPlus{\tFalse}{\tFalse} \stepsto \tFalse$, but $\tFalse$
+    does not typecheck to $\TInt$.
+    
+(e) *Add the following rules:*
+
+    \infrule[]{}{\tIf{0}{t_2}{t_3} \stepsto t_2}
+    
+    \infrule[]{
+        t_1 \typeof \TInt \andalso t_2 \typeof T \andalso t_3 \typeof T
+    }{\tIf{0}{t_2}{t_3} \typeof T}
+
+    Progress is not preserved, in the cases where the guard of the
+    expression is another number than zero. Even though
+    $\tIf{1}{\tTrue}{\tTrue} \typeof \TBool$ the expression cannot step.
+    
+    Preservation is still valid as all the expressions that can step is
+    able maintain their type. 
 
