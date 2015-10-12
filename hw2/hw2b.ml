@@ -1,6 +1,6 @@
 exception ImplementMe
 
-(* Problem 6 *)  
+(* Problem 6 *)
 
 (* As you saw in Problem 5, implementing the lambda calculus, and any
 other language that has variables, is annoying, because you have to
@@ -14,8 +14,8 @@ our case, the lambda calculus).  That way, we get substitution for
 free!  You will explore this style below...
 
 *)
-   
-  
+
+
 (* Type t represents abstract syntax trees for the lambda calculus.
 We are only representing the subset of *closed* terms in the lambda
 calculus -- HOAS cannot handle terms with free variables in them.
@@ -24,7 +24,7 @@ variables are represented implicitly via the fact that a lambda
 calculus function is represented as an OCaml function from terms to
 terms (hence the notion of higher-order syntax -- the syntax tree
 contains functions).
-   
+
 Example: the term ((function x -> x x) (function x -> x)) would be represented as follows:
 
    FunCall(Function(function x -> FunCall(x, x)), Function(function x -> x))
@@ -32,13 +32,20 @@ Example: the term ((function x -> x x) (function x -> x)) would be represented a
 *)
 
 type t = True | Function of (t -> t) | FunCall of t * t
-	
-  
+
+
 (* Implement the step function, which takes a term of type t above and
    produces a new term that results from taking one step of
    computation on t.  If t is a normal form, the step function should
    raise the NormalForm exception. *)
 
-exception NormalForm  
-    
-let rec step t = raise ImplementMe
+exception NormalForm
+
+let rec step t =
+  match t with
+    | FunCall (Function (x), True) -> x True (* For debugging purposes *)
+    | FunCall (Function (x), Function (y)) -> x (Function (y))
+    | FunCall (Function (x), t2) -> FunCall (Function (x), step t2)
+    | FunCall (t1, t2) -> FunCall (step t1, t2)
+    | _ -> raise NormalForm
+;;
