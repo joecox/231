@@ -36,7 +36,7 @@ If $t \in \Value$ and $t \typeof \TBool$, then $t = \tTrue$ or $t =
 The induction hypothesis is: if $t_0 \typeof T_0$ and $t_0 \typeof T_0
 \subderv t \typeof T$, then $t_0 \in \Value$ or $t_0 \stepsto t_0'$.
 Assuming initial case analysis on $t \typeof T$ and we have reached the 
-case \infr{T-And}: $t = \tAnd{t_1}{t_2}$, $T \typeof \TBool$, $t \typeof
+case \infr{T-And}: $t = \tAnd{t_1}{t_2}$, $T = \TBool$, $t \typeof
 \TBool$, $t_1 \typeof \TBool$, and $t_2 \typeof \TBool$ . $t$ is not a
 value, so it has to step to prove the theorem. Given the induction
 hypothesis we know that $t_1$ either does step or is a value.
@@ -61,6 +61,40 @@ If $t \typeof T$ and $t \stepsto t'$, then $t' \typeof T$
 The induction hypothesis is: if $t_0 \typeof T_0$, $t_0 \stepsto
 t_0'$, and $t_0 \typeof T_0 \subderv t \typeof T$, then $t'_0 \typeof
 T_0$. Continuing the case analysis with \infr{T-And}: $t =
-\tAnd{t_1}{t_2}$, $T \typeof \TBool$, $t \typeof \TBool$, $t_1 \typeof
-\TBool$, and $t_2 \typeof \TBool$.
+\tAnd{t_1}{t_2}$, $T = \TBool$, $t \typeof \TBool$, $t_1 \typeof
+\TBool$, and $t_2 \typeof \TBool$. We then do case analysis on $t
+\stepsto t'$, where for each case $t' \typeof \TBool$, to prove the
+theorem.
+
+*  Case \infr{E-AndTrue}: $t_1 = \tTrue$ and $t' = t_2$. We know the
+   type of $t_2 : \TBool$ and therefor also the type of $t' : \TBool$.
+
+*  Case \infr{E-AndFalse}: $t_1 = \tFalse$ and $t' = \tFalse$. We know
+   the type of $\tTrue : \TBool$ from \infr{T-True} and therefor also
+   the type of $t' : \TBool$
+
+*  Case \infr{E-And}: $t' = \tAnd{t'_1}{t_2}$ and $t_1 \stepsto t_1'$.
+   Using the induction hypothesis we know that $t_1$ preserves the 
+   type under stepping $t'_1 \typeof \TBool$. Using \infr{T-And}, can we
+   see that the $t' \typeof \TBool$, because both $t_1' \typeof \TBool$
+   and $t_2 \typeof \TBool$.
+
+For all case have we proven that we can build a derivation $t' \typeof
+\TBool$, therefor all so proven \cref{thm:preservation}.
+
+# Assignment 2
+
+> a) Demonstrate that $\tAnd{t_1}{t_2}$ can be treated like syntactic
+> sugar, by providing a new operational semantic for the term.
+
+\infrule[E-AndSS]{}{\tAnd{t_1}{t_2} \stepsto \tIf{t_1}{t_2}{\tFalse}}
+
+> b) Considering a eager version of $\tAnd{t_1}{t_2}$, can it still be
+> formulated as syntactic sugar?
+
+\infrule[E-AndEagerSS]{}{
+ \tAnd{t_1}{t_2} \stepsto \tIf{t_1}
+   {t_2}
+   {(\tIf{t_2}{\tFalse}{\tFalse})}
+}
 
