@@ -3,4 +3,64 @@ title: Homework 2 CS 231
 author: Joe Cox, Christian Gram Kalhauge
 ...
 
-# Assingment 1 
+# Assignment 1 
+
+> *Include* $\tAnd{t_1}{t_2}$ *in the semantics in a short-circuited
+> manor. `&`*
+
+> a) Add rules to the small-step operational semantics.
+
+\infrule[E-And]{t_1 \stepsto t_1'}{\tAnd{t_1}{t_2} \stepsto
+\tAnd{t_1'}{t_2}}
+\infrule[E-AndTrue]{}{\tAnd{\tTrue}{t_2} \stepsto t_2}
+\infrule[E-AndFalse]{}{\tAnd{\tFalse}{t_2} \stepsto \tFalse}
+
+> b) Add rules to the type system.
+
+\infrule[T-And]{t_1 \typeof \TBool \  t_2 \typeof \TBool}{\tAnd{t_2}{t_2} \typeof \TBool}
+
+> c) Provide a proof of progress. Assuming that it is performed by
+> induction on $t \typeof T$.
+
+\begin{theorem}[Progress]\label{thm:progress}
+If $t \typeof T$, then $t \in \Value$ or $t \stepsto t'$
+\end{theorem}
+
+In this proof we will use the Canonical Form lemma for booleans.
+
+\begin{lemma}[Canonical Form $\TBool$]\label{lem:canonicalBool}
+If $t \in \Value$ and $t \typeof \TBool$, then $t = \tTrue$ or $t =
+\tFalse$.
+\end{lemma}
+
+The induction hypothesis is: if $t_0 \typeof T_0$ and $t_0 \typeof T_0
+\subderv t \typeof T$, then $t_0 \in \Value$ or $t_0 \stepsto t_0'$.
+Assuming initial case analysis on $t \typeof T$ and we have reached the 
+case \infr{T-And}: $t = \tAnd{t_1}{t_2}$, $T \typeof \TBool$, $t \typeof
+\TBool$, $t_1 \typeof \TBool$, and $t_2 \typeof \TBool$ . $t$ is not a
+value, so it has to step to prove the theorem. Given the induction
+hypothesis we know that $t_1$ either does step or is a value.
+
+*  Case $t_1 \in \Value$: Using the \cref{lem:canonicalBool}, we
+   can see that either $t_1 = \tTrue$, where $t' = t_2$
+   \infr{E-AndTrue} or $t_1 = \tFalse$, where $t' = \tFalse$
+   \infr{E-AndFalse}, both satisfying the theorem.
+
+*  Case $t_1 \stepsto t_1'$: By \infr{E-And} we then know that there
+   exists a $t' = \tAnd{t_1'}{t_2}$.
+
+Since that there for all cases, can be found a $t'$ such that $t
+\stepsto t'$ we have proven \cref{thm:progress}.
+
+> d) Provide a proof of preservation, with the same assumptions as in c).
+
+\begin{theorem}[Preservation]\label{thm:preservation}
+If $t \typeof T$ and $t \stepsto t'$, then $t' \typeof T$
+\end{theorem}
+
+The induction hypothesis is: if $t_0 \typeof T_0$, $t_0 \stepsto
+t_0'$, and $t_0 \typeof T_0 \subderv t \typeof T$, then $t'_0 \typeof
+T_0$. Continuing the case analysis with \infr{T-And}: $t =
+\tAnd{t_1}{t_2}$, $T \typeof \TBool$, $t \typeof \TBool$, $t_1 \typeof
+\TBool$, and $t_2 \typeof \TBool$.
+
