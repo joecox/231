@@ -3,7 +3,7 @@ title: Homework 2 CS 231
 author: Joe Cox, Christian Gram Kalhauge
 ...
 
-# Assignment 1 
+# Assignment 1
 
 > *Include* $\tAnd{t_1}{t_2}$ *in the semantics in a short-circuited
 > manor. `&`*
