@@ -38,7 +38,7 @@ exception NormalForm
 
 let rec step t =
   match t with
-  | FunCall (Function (s, _t), True) -> subst s True _t
+  | FunCall (Function (s, _t), True) -> subst s True _t (* For debugging purposes *)
   | FunCall (Function (s1, _t1),
              Function (s2, _t2)) -> subst s1 (Function (s2, _t2)) _t1
   | FunCall (Function (s, _t), t2) -> FunCall (Function (s, _t), step t2)
