@@ -36,4 +36,12 @@ raise the NormalForm exception declared below. *)
 
 exception NormalForm
 
-let rec step t = raise ImplementMe
+let rec step t =
+  match t with
+  | FunCall (Function (s, _t), True) -> subst s True _t
+  | FunCall (Function (s1, _t1),
+             Function (s2, _t2)) -> subst s1 (Function (s2, _t2)) _t1
+  | FunCall (Function (s, _t), t2) -> FunCall (Function (s, _t), step t2)
+  | FunCall (t1, t2) -> FunCall(step t1, t2)
+  | _ -> raise NormalForm
+;;
