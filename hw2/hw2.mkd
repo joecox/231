@@ -180,3 +180,43 @@ For all case have we proven that we can build a derivation $t' \typeof
     $t_2 \typeof \TInt$ and $t_3 \typeof \TBool$, by $\infr{T-Num}$ and
     $\infr{T-Bool}$.  However, $t \stepsto t' = 1$, and $t' \typeof \TInt$
     by $\infr{T-Num}$.
+
+# Assignment 7
+
+\infrule[E-Refl]{}{t \multistep t}
+
+\infrule[E-Step]{t \stepsto t'}{t \multistep t'}
+
+\infrule[E-Trans]{t \multistep t'' \andalso t'' \multistep t'}{t \multistep t'}
+
+\begin{theorem}[$\Omega$ always steps to itself]\label{thm:omega}
+If $\tApp{(\tFun{x}{\tApp{x}{x}})}{\tFun{x}{\tApp{x}{x}}} \multistep t$
+then $t = \tApp{(\tFun{x}{\tApp{x}{x}})}{\tFun{x}{\tApp{x}{x}}}$.
+\end{theorem}
+
+We prove the theorem using induction on $\Omega \multistep t$. The
+induction hypothesis is if $\Omega \multistep t_0 \subderv \Omega
+\multistep t$, then $t_0 = \Omega$. Starting with case analysis on
+$\Omega \multistep t$:
+
+1. Case \infr{E-Refl}, directly from the rule $t = \Omega$.
+
+2. Case \infr{E-Step}, we get $\Omega \stepsto t$. By using case analysis on
+   $\Omega \stepsto t$, can we see that \infr{E-AppBeta} is the
+   only rule that apply, and that $\Omega \stepsto \Omega$. This means
+   that there exist only one value to $t = \Omega$.
+
+   \infrule[E-AppBeta]{}{
+   \tApp{(\tFun{x}{\tApp{x}{x}})}{\tFun{x}{\tApp{x}{x}}}
+   \stepsto
+   \tApp{(\tFun{x}{\tApp{x}{x}})}{(\tFun{x}{\tApp{x}{x}})}
+   }
+
+3. Case \infr{E-Trans}, we get $\Omega \multistep t''$ and $t'' \multistep
+   t$. Because $\Omega \multistep t'' \subderv \Omega \multistep t$,
+   can we use the induction hypothesis to show that $t'' = \Omega$.
+   This gives us that $\Omega \multistep t$, which we again can apply
+   the induction hypothesis on to get that $t = \Omega$.
+
+We have thereby shown $t = \Omega$ for all cases of $\Omega \multistep
+t$, and therefor also \cref{thm:omega}.

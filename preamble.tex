@@ -9,8 +9,9 @@
 \usepackage[scaled=0.7]{beramono}
 \usepackage[T1]{fontenc}
 
-\newcommand{\typeof}{:}
-\newcommand{\stepsto}{\rightarrow}
+\newcommand{\typeof}{\colon}
+\newcommand{\stepsto}{\longrightarrow}
+\newcommand{\multistep}{\stepsto^{\star}}
 \newcommand{\subterm}{\sqsubset}
 \newcommand{\subderv}{\sqsubset}
 
@@ -23,6 +24,8 @@
 \newcommand{\tAnd}[2]{{#1 \  \texttt{\&\&} \  #2}}
 \newcommand{\tPlus}[2]{{#1 \  \texttt{+} \  #2}}
 
+\newcommand{\tFun}[2]{{\lambda{} #1. #2}}
+\newcommand{\tApp}[2]{{#1#2}}
 % Types
 \newcommand{\TT}{\mathtt{T}}
 \newcommand{\TBool}{\mathtt{Bool}}
