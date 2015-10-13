@@ -35,7 +35,7 @@ If $t \in \Value$ and $t \typeof \TBool$, then $t = \tTrue$ or $t =
 
 The induction hypothesis is: if $t_0 \typeof T_0$ and $t_0 \typeof T_0
 \subderv t \typeof T$, then $t_0 \in \Value$ or $t_0 \stepsto t_0'$.
-Assuming initial case analysis on $t \typeof T$ and we have reached the 
+Assuming initial case analysis on $t \typeof T$ and we have reached the
 case \infr{T-And}: $t = \tAnd{t_1}{t_2}$, $T = \TBool$, $t \typeof
 \TBool$, $t_1 \typeof \TBool$, and $t_2 \typeof \TBool$ . $t$ is not a
 value, so it has to step to prove the theorem. Given the induction
@@ -74,7 +74,7 @@ theorem.
    the type of $t' : \TBool$
 
 *  Case \infr{E-And}: $t' = \tAnd{t'_1}{t_2}$ and $t_1 \stepsto t_1'$.
-   Using the induction hypothesis we know that $t_1$ preserves the 
+   Using the induction hypothesis we know that $t_1$ preserves the
    type under stepping $t'_1 \typeof \TBool$. Using \infr{T-And}, can we
    see that the $t' \typeof \TBool$, because both $t_1' \typeof \TBool$
    and $t_2 \typeof \TBool$.
@@ -102,7 +102,7 @@ For all case have we proven that we can build a derivation $t' \typeof
 # Assignment 3
 
 (a) *Remove the rule \infr{E-IfFalse}:*
-    
+
     Would invalidate progress, $\tIf{\tFalse}{\tTrue}{\tFalse}$ is
     neither a value or can't step, but preservation would be kept because
     the term can't step.
@@ -125,29 +125,29 @@ For all case have we proven that we can build a derivation $t' \typeof
     semantics, but would not effect neither progress or preservation.
 
 (d) *Add the following rules:*
-    
+
     \infrule[]{}{\tPlus{\tFalse}{\tFalse} \stepsto \tFalse}
-    
+
     \infrule[]{}{\tPlus{\tTrue}{\tTrue} \stepsto \tTrue}
 
     \infrule[]{
         t_1 \typeof \TBool \andalso t_2 \typeof \TBool
         }{
         \tPlus{t_1}{t_2} \typeof \TInt
-        } 
-    
+        }
+
     Progess is not preserved in the cases where the booleans do not
     match $\tPlus{\tTrue}{\tFalse} : \TInt$. Even though it does type
     check, it does not step.
-    
+
     Also preservation is not preserved, as the
     $\tPlus{\tFalse}{\tFalse} \stepsto \tFalse$, but $\tFalse$
     does not typecheck to $\TInt$.
-    
+
 (e) *Add the following rules:*
 
     \infrule[]{}{\tIf{0}{t_2}{t_3} \stepsto t_2}
-    
+
     \infrule[]{
         t_1 \typeof \TInt \andalso t_2 \typeof T \andalso t_3 \typeof T
     }{\tIf{0}{t_2}{t_3} \typeof T}
@@ -155,15 +155,28 @@ For all case have we proven that we can build a derivation $t' \typeof
     Progress is not preserved, in the cases where the guard of the
     expression is another number than zero. Even though
     $\tIf{1}{\tTrue}{\tTrue} \typeof \TBool$ the expression cannot step.
-    
+
     Preservation is still valid as all the expressions that can step is
-    able maintain their type. 
+    able maintain their type.
 
 # Assignment 4
 
 > *Consider again the language of just booleans and integers*:
 
-(a) 
+(a) For all possible $t' \typeof \TT$, we can find a $t$ such that $t \stepsto
+    t'$ in the following manner:
 
-(b)  
+    $t = \tIf{\tTrue}{t'}{t_3}$
 
+    We put the $t'$ into the then clause of an If expression.  By
+    $\infr{E-IfTrue}$, $t \stepsto t'$.  $t$ need not be well-typed, so we do
+    not care what $t_3$ is.
+
+(b) This is not a true theorem.
+
+    *Counterexample:*
+
+    $t = \tIf{\tTrue}{1}{\tFalse}$.  This term is not well-typed, because
+    $t_2 \typeof \TInt$ and $t_3 \typeof \TBool$, by $\infr{T-Num}$ and
+    $\infr{T-Bool}$.  However, $t \stepsto t' = 1$, and $t' \typeof \TInt$
+    by $\infr{T-Num}$.
