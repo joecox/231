@@ -20,12 +20,12 @@ type t = True | Var of string | Function of string * t | FunCall of t * t
    variables. *)
 
 let rec subst (x:string) (v:t) (t:t) =
-  match t with
-    | True -> True
-    | Var s -> if s = x then v else t
-    | Function (s, _t) -> if s = x then t
-                                   else Function(s, subst x v _t)
-    | FunCall (t1, t2) -> FunCall(subst x v t1, subst x v t2)
+  let subIn = subst x v  (* x or v do not change *)
+  in match t with
+    | Var s            when s = x  -> v
+    | Function (s, _t) when s <> x -> Function (s, subIn _t)
+    | FunCall (t1, t2)             -> FunCall (subIn t1, subIn t2)
+    | _                            -> t
 ;;
 
 (* 5b: Implement the step function, which takes a term of type t above
