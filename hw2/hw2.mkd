@@ -164,14 +164,15 @@ For all cases have we proven that we can build a derivation $t' \typeof
 
 > *Consider again the language of just booleans and integers*:
 
-(a) For all possible $t' \typeof \TT$, we can find a $t$ such that $t \stepsto
+(a) For all possible $t' \typeof T$, we can find a $t$ such that $t \stepsto
     t'$ in the following manner:
 
     $t = \tIf{\tTrue}{t'}{t_3}$
 
-    We put the $t'$ into the then clause of an If expression.  By
-    $\infr{E-IfTrue}$, $t \stepsto t'$.  $t$ need not be well-typed, so we do
-    not care what $t_3$ is.
+    We can put any $t'$ into the then clause of an If expression, because the
+    If expression accepts any valid term and $t' \typeof T$ shows that $t'$ is
+    a valid term.  By $\infr{E-IfTrue}$, $t \stepsto t'$.  $t$ need not be
+    well-typed, so we do not care what $t_3$ is.
 
 (b) This is not a true theorem.
 
