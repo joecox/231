@@ -43,9 +43,9 @@ exception NormalForm
 
 let rec step t =
   match t with
-    | FunCall (Function (x), True) -> x True (* For debugging purposes *)
-    | FunCall (Function (x), Function (y)) -> x (Function (y))
-    | FunCall (Function (x), t2) -> FunCall (Function (x), step t2)
-    | FunCall (t1, t2) -> FunCall (step t1, t2)
-    | _ -> raise NormalForm
+    | FunCall (Function x, True)               -> x True (* For debugging purposes *)
+    | FunCall (Function x, (Function _ as t2)) -> x t2
+    | FunCall ((Function x as t1), t2)         -> FunCall (t1, step t2)
+    | FunCall (t1, t2)                         -> FunCall (step t1, t2)
+    | _                                        -> raise NormalForm
 ;;
