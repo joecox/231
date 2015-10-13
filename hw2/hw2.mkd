@@ -104,7 +104,8 @@ For all cases have we proven that we can build a derivation $t' \typeof
 (a) *Remove the rule \infr{E-IfFalse}:*
 
     Would invalidate progress: without \infr{E-IfFalse},
-    $t = \tIf{\tFalse}{\tTrue}{\tFalse}$ is not a value and can't step. However,
+    $$t = \tIf{\tFalse}{\tTrue}{\tFalse}$$ 
+    is not a value and can't step. However,
     because $t \stepsto t'$ is an antecedent of the preservation implication and
     $t$ cannot step, then preservation remains unaffected.
 
@@ -114,9 +115,10 @@ For all cases have we proven that we can build a derivation $t' \typeof
 
     This type rule would invalidate the boolean Canonical Form
     (\cref{lem:canonicalBool}), transitively invalidating the progress
-    theorem. $\tIf{0}{\tFalse}{\tTrue} \typeof \TBool$ is well-typed but cannot
-    step, because $0$ does not step.  However, because $0$ cannot step,
-    preservation remains unaffected.
+    theorem. 
+    $$\tIf{0}{\tFalse}{\tTrue} \typeof \TBool$$
+    is well-typed but cannot step, because $0$ does not step.  However,
+    because $0$ cannot step, preservation remains unaffected.
 
 (c) *Add the following axiom:*
 
@@ -164,6 +166,11 @@ For all cases have we proven that we can build a derivation $t' \typeof
 
 > *Consider again the language of just booleans and integers*:
 
+\begin{theorem}[Reverse progress]
+If $t' \typeof T$, then there exists some term $t$ such that $t \stepsto
+t'$.
+\end{theorem}
+
 (a) For all possible $t' \typeof T$, we can find a $t$ such that $t \stepsto
     t'$ in the following manner:
 
@@ -173,6 +180,10 @@ For all cases have we proven that we can build a derivation $t' \typeof
     If expression accepts any valid term and $t' \typeof T$ shows that $t'$ is
     a valid term.  By $\infr{E-IfTrue}$, $t \stepsto t'$.  $t$ need not be
     well-typed, so we do not care what $t_3$ is.
+
+\begin{theorem}[Reverse preservation]
+If $t' \typeof T$ and $t \stepsto t'$ then $t \typeof T$.
+\end{theorem}
 
 (b) This is not a true theorem.
 
