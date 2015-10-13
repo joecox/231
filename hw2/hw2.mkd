@@ -6,7 +6,7 @@ author: Joe Cox, Christian Gram Kalhauge
 # Assignment 1
 
 > *Include* $\tAnd{t_1}{t_2}$ *in the semantics in a short-circuited
-> manor. `&`*
+> manner.*
 
 > a) Add rules to the small-step operational semantics.
 
@@ -49,8 +49,8 @@ hypothesis we know that $t_1$ either does step or is a value.
 *  Case $t_1 \stepsto t_1'$: By \infr{E-And} we then know that there
    exists a $t' = \tAnd{t_1'}{t_2}$.
 
-Since that there for all cases, can be found a $t'$ such that $t
-\stepsto t'$ we have proven \cref{thm:progress}.
+Since that for all cases, there can be found a $t'$ such that $t
+\stepsto t'$, we have proven \cref{thm:progress}.
 
 > d) Provide a proof of preservation, with the same assumptions as in c).
 
@@ -67,10 +67,10 @@ T_0$. Continuing the case analysis with \infr{T-And}: $t =
 theorem.
 
 *  Case \infr{E-AndTrue}: $t_1 = \tTrue$ and $t' = t_2$. We know the
-   type of $t_2 : \TBool$ and therefor also the type of $t' : \TBool$.
+   type of $t_2 : \TBool$ and therefore also the type of $t' : \TBool$.
 
 *  Case \infr{E-AndFalse}: $t_1 = \tFalse$ and $t' = \tFalse$. We know
-   the type of $\tTrue : \TBool$ from \infr{T-True} and therefor also
+   the type of $\tTrue : \TBool$ from \infr{T-True} and therefore also
    the type of $t' : \TBool$
 
 *  Case \infr{E-And}: $t' = \tAnd{t'_1}{t_2}$ and $t_1 \stepsto t_1'$.
@@ -79,8 +79,8 @@ theorem.
    see that the $t' \typeof \TBool$, because both $t_1' \typeof \TBool$
    and $t_2 \typeof \TBool$.
 
-For all case have we proven that we can build a derivation $t' \typeof
-\TBool$, therefor all so proven \cref{thm:preservation}.
+For all cases have we proven that we can build a derivation $t' \typeof
+\TBool$. Therefore we have also proven \cref{thm:preservation}.
 
 
 # Assignment 2
@@ -103,26 +103,27 @@ For all case have we proven that we can build a derivation $t' \typeof
 
 (a) *Remove the rule \infr{E-IfFalse}:*
 
-    Would invalidate progress, $\tIf{\tFalse}{\tTrue}{\tFalse}$ is
-    neither a value or can't step, but preservation would be kept because
-    the term can't step.
+    Would invalidate progress: without \infr{E-IfFalse},
+    $t = \tIf{\tFalse}{\tTrue}{\tFalse}$ is not a value and can't step. However,
+    because $t \stepsto t'$ is an antecedent of the preservation implication and
+    $t$ cannot step, then preservation remains unaffected.
 
 (b) *Add the following axiom to the type system:*
 
-    \infrule[]{}{0 \typeof bool}
+    \infrule[]{}{0 \typeof \TBool}
 
     This type rule would invalidate the boolean Canonical Form
     (\cref{lem:canonicalBool}), transitively invalidating the progress
-    theorem. $\tIf{0}{\tFalse}{\tTrue} \typeof \TBool$, but would not be
-    able to step. $0$ does not step, and do therefor not effect
-    preservation.
+    theorem. $\tIf{0}{\tFalse}{\tTrue} \typeof \TBool$ is well-typed but cannot
+    step, because $0$ does not step.  However, because $0$ cannot step,
+    preservation remains unaffected.
 
 (c) *Add the following axiom:*
 
     \infrule[]{}{\tIf{t_1}{t_2}{t_3} \stepsto t_2}
 
     The new rule will introduce nondeterminism in the operational
-    semantics, but would not effect neither progress or preservation.
+    semantics, but would not effect progress and preservation.
 
 (d) *Add the following rules:*
 
@@ -136,7 +137,7 @@ For all case have we proven that we can build a derivation $t' \typeof
         \tPlus{t_1}{t_2} \typeof \TInt
         }
 
-    Progess is not preserved in the cases where the booleans do not
+    Progress is not preserved in the cases where the booleans do not
     match $\tPlus{\tTrue}{\tFalse} : \TInt$. Even though it does type
     check, it does not step.
 
@@ -152,12 +153,12 @@ For all case have we proven that we can build a derivation $t' \typeof
         t_1 \typeof \TInt \andalso t_2 \typeof T \andalso t_3 \typeof T
     }{\tIf{0}{t_2}{t_3} \typeof T}
 
-    Progress is not preserved, in the cases where the guard of the
-    expression is another number than zero. Even though
+    Progress is not preserved in the cases where the guard of the
+    expression is a number other than zero. Even though
     $\tIf{1}{\tTrue}{\tTrue} \typeof \TBool$ the expression cannot step.
 
-    Preservation is still valid as all the expressions that can step is
-    able maintain their type.
+    Preservation is still valid as all the expressions that can step are
+    able to maintain their types.
 
 # Assignment 4
 
@@ -180,6 +181,14 @@ For all case have we proven that we can build a derivation $t' \typeof
     $t_2 \typeof \TInt$ and $t_3 \typeof \TBool$, by $\infr{T-Num}$ and
     $\infr{T-Bool}$.  However, $t \stepsto t' = 1$, and $t' \typeof \TInt$
     by $\infr{T-Num}$.
+
+# Assignment 5
+
+  *See hw2a.ml.*
+
+# Assignment 6
+
+  *See hw2b.ml.*
 
 # Assignment 7
 
@@ -219,4 +228,4 @@ $\Omega \multistep t$:
    the induction hypothesis on to get that $t = \Omega$.
 
 We have thereby shown $t = \Omega$ for all cases of $\Omega \multistep
-t$, and therefor also \cref{thm:omega}.
+t$, and therefore also \cref{thm:omega}.
