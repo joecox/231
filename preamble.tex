@@ -9,13 +9,22 @@
 \usepackage[scaled=0.7]{beramono}
 \usepackage[T1]{fontenc}
 
+% Judgement 
 \newcommand{\typeof}{\colon}
 \newcommand{\stepsto}{\longrightarrow}
 \newcommand{\multistep}{\stepsto^{\star}}
 \newcommand{\subterm}{\sqsubset}
 \newcommand{\subderv}{\sqsubset}
+\newcommand{\matches}[3]{\vdash{} #1\ \mathtt{matches}\ #2 \Rightarrow{} #3}
+\newcommand{\notmatches}[2]{\not\vdash{} #1\ \mathtt{matches}\ #2}
+
+\newcommand{\typecheck}[3]{#1 \vdash{} #2 \typeof{} #3}
+\newcommand{\typematch}[3]{\vdash{} #1 \typeof{} #2 \Rightarrow{} #3}
 
 \newcommand{\infr}[1]{({\textsc{#1}})}
+
+\newcommand{\assign}[2]{(#1, #2)}
+
 
 % Language
 \newcommand{\tTrue}{\mathtt{true}}
@@ -23,13 +32,17 @@
 \newcommand{\tIf}[3]{{\mathtt{if} \  #1 \  \mathtt{then} \  #2 \  \mathtt{else} \  #3}}
 \newcommand{\tAnd}[2]{{#1 \  \texttt{\&\&} \  #2}}
 \newcommand{\tPlus}[2]{{#1 \  \texttt{+} \  #2}}
+\newcommand{\tEmpty}{\_}
 
 \newcommand{\tFun}[2]{{\lambda{} #1. #2}}
 \newcommand{\tApp}[2]{{#1#2}}
 
+\newcommand{\tMatchPair}[5]{(\mathtt{match}\ #1\ \mathtt{with}\ #2 \Rightarrow{} #3\ |\ #4 \Rightarrow{} #5)}
+\newcommand{\tPair}[2]{(#1, #2)}
 % Types
 \newcommand{\TBool}{\mathtt{Bool}}
 \newcommand{\TInt}{\mathtt{Int}}
+\newcommand{\TPair}[2]{#1 \land{} #2}
 
 \newcommand{\Value}{\mathbb{V}}
 \newtheorem{theorem}{Theorem}

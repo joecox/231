@@ -10,4 +10,85 @@ author: Joe Cox, Christian Gram Kalhauge
 
 # Assignment 3
 
+We add the following syntax to the language:
+
+```
+t ::= ... | ( t , t ) | (match t with p => t | p => t)
+p ::= _ : T | x : T | n | ( p , p )
+
+judgement |- v matches p => E
+```
+
+a)  Provide rules for a new judgment: $\matches{v}{p}{E}$
+
+We always match the empty pattern:
+\infrule[M-Empty]{}{\matches{v}{\tEmpty \typeof T}{\emptyset}}
+
+Numbers match exact numbers: 
+\infrule[M-Number]{}{\matches{n}{n}{\emptyset}}
+
+Variable match all values, but adds the variable-value pair to the
+environment:
+\infrule[M-Variable]{}{\matches{v}{x \typeof T}{\{\assign{x}{v}\}}}
+
+With pairs, recursively match the sub-terms with the sub-patterns and
+combine the environments required, assuming that the pattern does not
+reuse variables:
+\infrule[M-Pair]{
+\matches{v_1}{p_1}{E_1} \andalso \matches{v_2}{p_2}{E_2}
+}{
+\matches{\tPair{v_1}{v_2}}{\tPair{p_1}{p_2}}{E_1 \cup E_2}
+}
+
+b) Provide the stepping rules for the match. Here we use the notation
+($t[E]$) which means for each variable pair in $E$ is assigned in $t$.
+
+If the matched values is not a value, step it:
+\infrule[E-MatchStep]{t \stepsto t'}{
+    \tMatchPair{t}{p_1}{t_1}{p_2}{t_2} \stepsto
+    \tMatchPair{t'}{p_1}{t_1}{p_2}{t_2} 
+}
+
+\infrule[E-Match1]{\matches{v}{p_1}{E}}{
+    \tMatchPair{v}{p_1}{t_1}{p_2}{t_2} \stepsto
+    t_1 [E]
+}
+
+\infrule[E-Match2]{\notmatches{v}{p_1} \andalso \matches{v}{p_2}{E}}{
+    \tMatchPair{v}{p_1}{t_1}{p_2}{t_2} \stepsto t_2 [E]
+}
+
+c) Define a judgement $\typematch{p}{T}{\Gamma}$
+
+\infrule[X-MatchNil]{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
+\infrule[X-MatchNum]{}{\typematch{n}{\TInt}{\emptyset}}
+
+\infrule[X-MatchVar]{}{\typematch{(x \typeof T)}{T}{\{(x, T)\}}}
+
+\infrule[X-MatchParan]{
+    \typematch{p_1}{T_1}{\Gamma_1} \andalso \typematch{p_2}{T_2}{\Gamma_2}
+}{
+    \typematch{\tPair{p_1}{p_2}}
+        {\TPair{T_1}{T_2}}
+        {\Gamma_1 \cup \Gamma_2}
+}
+
+d) Finally extend the type checking judgement
+$\typecheck{\Gamma}{t}{T}$, to also include match. Our implementation of
+the type checker requires that the pattern has the same type as the 
+input and all pattern matches should have the same type. 
+
+\infrule[T-Match]{
+         \typecheck{\Gamma}{t}{T'} \\ 
+\andalso \typematch{p_1}{T'}{\Gamma_1} 
+\andalso \typecheck{\Gamma \cup \Gamma_1}{t_1}{T}  \\
+\andalso \typematch{p_2}{T'}{\Gamma_2} 
+\andalso \typecheck{\Gamma \cup \Gamma_2}{t_2}{T} 
+}{
+\typecheck{\Gamma}{\tMatchPair{t}{p_1}{t_1}{p_2}{t_2}}{T}
+}
+
+
 # Assignment 4
+
+
