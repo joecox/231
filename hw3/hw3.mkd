@@ -49,23 +49,34 @@ If the matched values is not a value, step it:
     \tMatchPair{t'}{p_1}{t_1}{p_2}{t_2} 
 }
 
+If we can match the first pattern, reduce to the corresponding term with
+all variables replaced by the environment:
 \infrule[E-Match1]{\matches{v}{p_1}{E}}{
     \tMatchPair{v}{p_1}{t_1}{p_2}{t_2} \stepsto
     t_1 [E]
 }
 
+If we can not match the first patters, match on the second:
 \infrule[E-Match2]{\notmatches{v}{p_1} \andalso \matches{v}{p_2}{E}}{
     \tMatchPair{v}{p_1}{t_1}{p_2}{t_2} \stepsto t_2 [E]
 }
 
 c) Define a judgement $\typematch{p}{T}{\Gamma}$
 
-\infrule[X-MatchNil]{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
-\infrule[X-MatchNum]{}{\typematch{n}{\TInt}{\emptyset}}
+The type of the empty pattern is just the type:
+\infrule{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
 
-\infrule[X-MatchVar]{}{\typematch{(x \typeof T)}{T}{\{(x, T)\}}}
+The type of the integer pattern is $\TInt$:
+\infrule{}{\typematch{n}{\TInt}{\emptyset}}
 
-\infrule[X-MatchParan]{
+The type of the variable pattern is just the Type, but we have
+to add the requirement to the type environment:
+\infrule{}{\typematch{(x \typeof T)}{T}{\{(x, T)\}}}
+
+The type of the pair pattern is the union of the two pairs, ant with
+the union of the two type environment. This works because we are
+assuming no reuse of variables.
+\infrule{
     \typematch{p_1}{T_1}{\Gamma_1} \andalso \typematch{p_2}{T_2}{\Gamma_2}
 }{
     \typematch{\tPair{p_1}{p_2}}
