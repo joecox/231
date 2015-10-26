@@ -6,6 +6,24 @@ author: Joe Cox, Christian Gram Kalhauge
 
 # Assignment 1
 
+We add the following syntax to the simply typed lambda calculus
+with booleans, integers, Unit, and $\mathtt{let}$:
+$$\tWhile{t_1}{t_2}$$
+
+Provide small-step operational semantics and a typing rule for $\mathtt{while}$.
+
+\infrule[E-While]{}{
+    \tWhile{t_1}{t_2} \stepsto \tIf{t_1}{t_2;\tWhile{t_1}{t_2}}{\tUnit}
+}
+
+\infrule[T-While]{
+    \typecheck{\Gamma}{t_1}{\TBool}
+    \andalso
+    \typecheck{\Gamma}{t_2}{\TUnit}
+}{
+    \typecheck{\Gamma}{\tWhile{t_1}{t_2}}{\TUnit}
+}
+
 # Assignment 2
 
 # Assignment 3
@@ -90,5 +108,3 @@ input and all pattern matches should have the same type.
 
 
 # Assignment 4
-
-
