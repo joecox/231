@@ -26,6 +26,13 @@ Provide small-step operational semantics and a typing rule for $\mathtt{while}$.
 
 # Assignment 2
 
+Augment the language from before Assignment 1 with $\mathtt{letrec}$ and
+redefine $\mathtt{while}$ and syntactic sugar.
+
+\infrule[E-While]{}{
+  \tWhile{t_1}{t_2} \stepsto \tLetrec{x}{\tIf{t_1}{t_2;x}{\tUnit}}{x}
+}
+
 # Assignment 3
 
 We add the following syntax to the language:
