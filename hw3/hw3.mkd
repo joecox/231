@@ -24,25 +24,43 @@ Provide small-step operational semantics and a typing rule for $\mathtt{while}$.
     \typecheck{\Gamma}{\tWhile{t_1}{t_2}}{\TUnit}
 }
 
+Note: These semantics will cause either $t_2$ to never execute, or the loop
+to execute forever, in the setting where $t_1$ and $t_2$ are pure.
+
 # Assignment 2
 
-Augment the language from before Assignment 1 with $\mathtt{letrec}$ and
-redefine $\mathtt{while}$ and syntactic sugar.
+Augment the language from Assignment 1 with $\mathtt{letrec}$ and
+redefine $\mathtt{while}$ as syntactic sugar.
 
-\infrule[E-While]{}{
-  \tWhile{t_1}{t_2} \stepsto \tLetrec{x}{\tIf{t_1}{t_2;x}{\tUnit}}{x}
+\infrule[E-While2]{}{
+  \tWhile{t_1}{t_2} \stepsto \tLetrec{x}{
+    \tFunction{\tEmpty}{\TUnit}{\tIf{t_1}{t_2;\tApp{x}{\tUnit}}{\tUnit}}}{\tApp{x}{\tUnit}
+  }
+}
+
+Because the nature of our language only allows for pure functions,
+we know that $t_1$ will not change in every iteration and therefore need be 
+checked only once.  So an equivalent expression would be:
+
+\infrule[E-While3]{}{
+  \tWhile{t_1}{t_2} \stepsto 
+    \tIf
+      { t_1 }
+      { \tLetrec{x}
+          { \tFunction{\tEmpty}{\TUnit}{t_2;\tApp{x}{\tUnit}} }
+          { \tApp{x}{\tUnit} }
+      }
+      { \tUnit }
 }
 
 # Assignment 3
 
 We add the following syntax to the language:
 
-```
-t ::= ... | ( t , t ) | (match t with p => t | p => t)
-p ::= _ : T | x : T | n | ( p , p )
-
-judgement |- v matches p => E
-```
+\begin{align*}
+t ::=&\ \ldots\ |\ \tMatchPair{t}{p}{t}{p}{t}\\
+p ::=&\ \tEmpty \typeof T\ |\ x \typeof T\ |\ n\ |\ \tPair{p}{p}
+\end{align*}
 
 a)  Provide rules for a new judgment: $\matches{v}{p}{E}$
 
@@ -66,7 +84,8 @@ reuse variables:
 }
 
 b) Provide the stepping rules for the match. Here we use the notation
-($t[E]$) which means for each variable pair in $E$ is assigned in $t$.
+($t[E]$) which means that for each variable value pair $\tPair{x_i}{v_i}$ in $E$
+we assign $v_i$ for all occurrences of $x_i$ in $t$.
 
 If the matched values is not a value, step it:
 \infrule[E-MatchStep]{t \stepsto t'}{
@@ -120,8 +139,8 @@ Provide a term with the associated type:
 
 a) ((A $\rightarrow$ B) $\wedge$ (B $\rightarrow$ C)) $\rightarrow$ (A $\rightarrow$ C)
 $$
-\tFunction{x}{((\TFun{A}{B})\ \wedge\ (\TFun{B}{C}))}{
-    \tFunction{y}{A}{\tApp{(\tSnd{x})}{(\tApp{(\tFst{x})}{\ y})}}
+\tFunction{x}{(\TFun{A}{B})\ \wedge\ (\TFun{B}{C})}{
+    \tFunction{y}{A}{\tApp{\tSnd{x}}{(\tApp{\tFst{x}}{y})}}
 }
 $$
 
@@ -131,3 +150,14 @@ $$
 $$
 
 c) ((A $\vee$ B) $\rightarrow$ C) $\rightarrow$ ((A $\rightarrow$ C) $\wedge$ (B $\rightarrow$ C))
+$$
+\tFunction{x}{
+    \TFun{(\TUnion{A}{B})}{C}
+}{
+    \tPair{
+        \tFunction{z}{A}{\tApp{x}{(\tLeft{z})}}
+    }{
+        \tFunction{z}{B}{\tApp{x}{(\tRight{z})}}
+    }
+}
+$$
