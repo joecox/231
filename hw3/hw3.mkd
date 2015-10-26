@@ -65,19 +65,19 @@ p ::=&\ \tEmpty \typeof T\ |\ x \typeof T\ |\ n\ |\ \tPair{p}{p}
 a)  Provide rules for a new judgment: $\matches{v}{p}{E}$
 
 We always match the empty pattern:
-\infrule[M-Empty]{}{\matches{v}{\tEmpty \typeof T}{\emptyset}}
+\infrule{}{\matches{v}{\tEmpty \typeof T}{\emptyset}}
 
 Numbers match exact numbers: 
-\infrule[M-Number]{}{\matches{n}{n}{\emptyset}}
+\infrule{}{\matches{n}{n}{\emptyset}}
 
 Variable match all values, but adds the variable-value pair to the
 environment:
-\infrule[M-Variable]{}{\matches{v}{x \typeof T}{\{\assign{x}{v}\}}}
+\infrule{}{\matches{v}{x \typeof T}{\{\assign{x}{v}\}}}
 
 With pairs, recursively match the sub-terms with the sub-patterns and
 combine the environments required, assuming that the pattern does not
 reuse variables:
-\infrule[M-Pair]{
+\infrule{
 \matches{v_1}{p_1}{E_1} \andalso \matches{v_2}{p_2}{E_2}
 }{
 \matches{\tPair{v_1}{v_2}}{\tPair{p_1}{p_2}}{E_1 \cup E_2}
@@ -87,7 +87,6 @@ b) Provide the stepping rules for the match. Here we use the notation
 ($t[E]$) which means that for each variable value pair $\tPair{x_i}{v_i}$ in $E$
 we assign $v_i$ for all occurrences of $x_i$ in $t$.
 
-If the matched values is not a value, step it:
 \infrule[E-MatchStep]{t \stepsto t'}{
     \tMatchPair{t}{p_1}{t_1}{p_2}{t_2} \stepsto
     \tMatchPair{t'}{p_1}{t_1}{p_2}{t_2} 
@@ -104,12 +103,12 @@ If the matched values is not a value, step it:
 
 c) Define a judgement $\typematch{p}{T}{\Gamma}$
 
-\infrule[X-MatchNil]{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
-\infrule[X-MatchNum]{}{\typematch{n}{\TInt}{\emptyset}}
+\infrule{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
+\infrule{}{\typematch{n}{\TInt}{\emptyset}}
 
-\infrule[X-MatchVar]{}{\typematch{(x \typeof T)}{T}{\{(x, T)\}}}
+\infrule{}{\typematch{(x \typeof T)}{T}{\{(x, T)\}}}
 
-\infrule[X-MatchParan]{
+\infrule{
     \typematch{p_1}{T_1}{\Gamma_1} \andalso \typematch{p_2}{T_2}{\Gamma_2}
 }{
     \typematch{\tPair{p_1}{p_2}}
@@ -119,8 +118,9 @@ c) Define a judgement $\typematch{p}{T}{\Gamma}$
 
 d) Finally extend the type checking judgement
 $\typecheck{\Gamma}{t}{T}$, to also include match. Our implementation of
-the type checker requires that the pattern has the same type as the 
-input and all pattern matches should have the same type. 
+the type checker requires that all patterns have the same type as the 
+input and all resulting terms of the match cases have the same type as
+each other and the entire match term.
 
 \infrule[T-Match]{
          \typecheck{\Gamma}{t}{T'} \\ 
