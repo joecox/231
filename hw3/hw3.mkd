@@ -115,3 +115,19 @@ input and all pattern matches should have the same type.
 
 
 # Assignment 4
+
+Provide a term with the associated type:
+
+a) ((A $\rightarrow$ B) $\wedge$ (B $\rightarrow$ C)) $\rightarrow$ (A $\rightarrow$ C)
+$$
+\tFunction{x}{((\TFun{A}{B})\ \wedge\ (\TFun{B}{C}))}{
+    \tFunction{y}{A}{\tApp{(\tSnd{x})}{(\tApp{(\tFst{x})}{\ y})}}
+}
+$$
+
+b) (A $\vee$ B) $\rightarrow$ (B $\vee$ A)
+$$
+\tFunction{x}{(A\ \vee\ B)}{\tMatch{x}{x_1}{\tRight{x_1}}{x_2}{\tLeft{x_2}}}
+$$
+
+c) ((A $\vee$ B) $\rightarrow$ C) $\rightarrow$ ((A $\rightarrow$ C) $\wedge$ (B $\rightarrow$ C))

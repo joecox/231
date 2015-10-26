@@ -38,8 +38,17 @@
 \newcommand{\tFun}[2]{{\lambda{} #1. #2}}
 \newcommand{\tApp}[2]{{#1#2}}
 
+\newcommand{\tFunction}[3]{\mathtt{function}\ #1 \typeof #2 \rightarrow #3}
+
 \newcommand{\tMatchPair}[5]{(\mathtt{match}\ #1\ \mathtt{with}\ #2 \Rightarrow{} #3\ |\ #4 \Rightarrow{} #5)}
 \newcommand{\tPair}[2]{(#1, #2)}
+
+\newcommand{\tLeft}[1]{\mathtt{left}\ #1}
+\newcommand{\tRight}[1]{\mathtt{right}\ #1}
+\newcommand{\tMatch}[5]{\mathtt{match}\ #1\ \mathtt{with}\ \tLeft{#2} \rightarrow #3\ |\ \tRight{#4} \rightarrow #5}
+
+\newcommand{\tFst}[1]{\mathtt{fst}\ #1}
+\newcommand{\tSnd}[1]{\mathtt{snd}\ #1}
 
 \newcommand{\tWhile}[2]{\mathtt{while}\ #1\ \mathtt{do}\ #2}
 \newcommand{\tLetrec}[3]{\mathtt{letrec}\ #1\ \texttt{=}\ #2\ \mathtt{in}\ #3}
@@ -49,6 +58,7 @@
 \newcommand{\TInt}{\mathtt{Int}}
 \newcommand{\TPair}[2]{#1 \land{} #2}
 \newcommand{\TUnit}{\mathtt{Unit}}
+\newcommand{\TFun}[2]{#1 \rightarrow #2}
 
 \newcommand{\Value}{\mathbb{V}}
 \newtheorem{theorem}{Theorem}
