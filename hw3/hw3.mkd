@@ -1,49 +1,92 @@
 ---
-title: Homework 2 CS 231
+title: Homework 3 CS 231
 author: Joe Cox, Christian Gram Kalhauge
 ...
 
 
 # Assignment 1
 
+We add the following syntax to the simply typed lambda calculus
+with booleans, integers, Unit, and $\mathtt{let}$:
+$$\tWhile{t_1}{t_2}$$
+
+Provide small-step operational semantics and a typing rule for $\mathtt{while}$.
+
+\infrule[E-While]{}{
+    \tWhile{t_1}{t_2} \stepsto \tIf{t_1}{t_2;\tWhile{t_1}{t_2}}{\tUnit}
+}
+
+\infrule[T-While]{
+    \typecheck{\Gamma}{t_1}{\TBool}
+    \andalso
+    \typecheck{\Gamma}{t_2}{\TUnit}
+}{
+    \typecheck{\Gamma}{\tWhile{t_1}{t_2}}{\TUnit}
+}
+
+Note: These semantics will cause either $t_2$ to never execute, or the loop
+to execute forever, in the setting where $t_1$ and $t_2$ are pure.
+
 # Assignment 2
+
+Augment the language from Assignment 1 with $\mathtt{letrec}$ and
+redefine $\mathtt{while}$ as syntactic sugar.
+
+\infrule[E-While2]{}{
+  \tWhile{t_1}{t_2} \stepsto \tLetrec{x}{
+    \tFunction{\tEmpty}{\TUnit}{\tIf{t_1}{t_2;\tApp{x}{\tUnit}}{\tUnit}}}{\tApp{x}{\tUnit}
+  }
+}
+
+Because the nature of our language only allows for pure functions,
+we know that $t_1$ will not change in every iteration and therefore need be 
+checked only once.  So an equivalent expression would be:
+
+\infrule[E-While3]{}{
+  \tWhile{t_1}{t_2} \stepsto 
+    \tIf
+      { t_1 }
+      { \tLetrec{x}
+          { \tFunction{\tEmpty}{\TUnit}{t_2;\tApp{x}{\tUnit}} }
+          { \tApp{x}{\tUnit} }
+      }
+      { \tUnit }
+}
 
 # Assignment 3
 
 We add the following syntax to the language:
 
-```
-t ::= ... | ( t , t ) | (match t with p => t | p => t)
-p ::= _ : T | x : T | n | ( p , p )
-
-judgement |- v matches p => E
-```
+\begin{align*}
+t ::=&\ \ldots\ |\ \tMatchPair{t}{p}{t}{p}{t}\\
+p ::=&\ \tEmpty \typeof T\ |\ x \typeof T\ |\ n\ |\ \tPair{p}{p}
+\end{align*}
 
 a)  Provide rules for a new judgment: $\matches{v}{p}{E}$
 
 We always match the empty pattern:
-\infrule[M-Empty]{}{\matches{v}{\tEmpty \typeof T}{\emptyset}}
+\infrule{}{\matches{v}{\tEmpty \typeof T}{\emptyset}}
 
 Numbers match exact numbers: 
-\infrule[M-Number]{}{\matches{n}{n}{\emptyset}}
+\infrule{}{\matches{n}{n}{\emptyset}}
 
 Variable match all values, but adds the variable-value pair to the
 environment:
-\infrule[M-Variable]{}{\matches{v}{x \typeof T}{\{\assign{x}{v}\}}}
+\infrule{}{\matches{v}{x \typeof T}{\{\assign{x}{v}\}}}
 
 With pairs, recursively match the sub-terms with the sub-patterns and
 combine the environments required, assuming that the pattern does not
 reuse variables:
-\infrule[M-Pair]{
+\infrule{
 \matches{v_1}{p_1}{E_1} \andalso \matches{v_2}{p_2}{E_2}
 }{
 \matches{\tPair{v_1}{v_2}}{\tPair{p_1}{p_2}}{E_1 \cup E_2}
 }
 
 b) Provide the stepping rules for the match. Here we use the notation
-($t[E]$) which means for each variable pair in $E$ is assigned in $t$.
+($t[E]$) which means that for each variable value pair $\tPair{x_i}{v_i}$ in $E$
+we assign $v_i$ for all occurrences of $x_i$ in $t$.
 
-If the matched values is not a value, step it:
 \infrule[E-MatchStep]{t \stepsto t'}{
     \tMatchPair{t}{p_1}{t_1}{p_2}{t_2} \stepsto
     \tMatchPair{t'}{p_1}{t_1}{p_2}{t_2} 
@@ -63,6 +106,7 @@ If we can not match the first patters, match on the second:
 
 c) Define a judgement $\typematch{p}{T}{\Gamma}$
 
+<<<<<<< HEAD
 The type of the empty pattern is just the type:
 \infrule{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
 
@@ -76,6 +120,13 @@ to add the requirement to the type environment:
 The type of the pair pattern is the union of the two pairs, ant with
 the union of the two type environment. This works because we are
 assuming no reuse of variables.
+=======
+\infrule{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
+\infrule{}{\typematch{n}{\TInt}{\emptyset}}
+
+\infrule{}{\typematch{(x \typeof T)}{T}{\{(x, T)\}}}
+
+>>>>>>> f1b5a50d58e8e209eda0550caf303d5a7051eb2c
 \infrule{
     \typematch{p_1}{T_1}{\Gamma_1} \andalso \typematch{p_2}{T_2}{\Gamma_2}
 }{
@@ -86,8 +137,9 @@ assuming no reuse of variables.
 
 d) Finally extend the type checking judgement
 $\typecheck{\Gamma}{t}{T}$, to also include match. Our implementation of
-the type checker requires that the pattern has the same type as the 
-input and all pattern matches should have the same type. 
+the type checker requires that all patterns have the same type as the 
+input and all resulting terms of the match cases have the same type as
+each other and the entire match term.
 
 \infrule[T-Match]{
          \typecheck{\Gamma}{t}{T'} \\ 
@@ -102,4 +154,29 @@ input and all pattern matches should have the same type.
 
 # Assignment 4
 
+Provide a term with the associated type:
 
+a) ((A $\rightarrow$ B) $\wedge$ (B $\rightarrow$ C)) $\rightarrow$ (A $\rightarrow$ C)
+$$
+\tFunction{x}{(\TFun{A}{B})\ \wedge\ (\TFun{B}{C})}{
+    \tFunction{y}{A}{\tApp{\tSnd{x}}{(\tApp{\tFst{x}}{y})}}
+}
+$$
+
+b) (A $\vee$ B) $\rightarrow$ (B $\vee$ A)
+$$
+\tFunction{x}{(A\ \vee\ B)}{\tMatch{x}{x_1}{\tRight{x_1}}{x_2}{\tLeft{x_2}}}
+$$
+
+c) ((A $\vee$ B) $\rightarrow$ C) $\rightarrow$ ((A $\rightarrow$ C) $\wedge$ (B $\rightarrow$ C))
+$$
+\tFunction{x}{
+    \TFun{(\TUnion{A}{B})}{C}
+}{
+    \tPair{
+        \tFunction{z}{A}{\tApp{x}{(\tLeft{z})}}
+    }{
+        \tFunction{z}{B}{\tApp{x}{(\tRight{z})}}
+    }
+}
+$$
