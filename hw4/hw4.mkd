@@ -1,0 +1,4 @@
+---
+title: Homework 4 CS 231
+author: Joe Cox, Christian Gram Kalhauge
+...
