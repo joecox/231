@@ -22,3 +22,7 @@ c) $\texttt{let\ f\ =\ \textbf{(let\ n\ =\ ref\ 5\ in\ function\ x\ ->\ (n\ :=\ 
    $\texttt{\ \ (f\ ())\ *\ (f\ ());;}$
 
 # Assignment 4
+
+a) $t = \tLet{r}{ref\ \tUnit}{free\ r;\ !r}$
+
+   Because $\typecheck{\emptyset;\emptyset}{r}{\TRef{\TUnit}}$, then $\typecheck{\emptyset;\emptyset}{!r}{\TUnit}$, and $\typecheck{\emptyset;\emptyset}{t}{\TUnit}$.  But $t$ will be eventually stuck because $free\ r$ removes $r$ from $\mu$, but by \infr{E-DerefLoc}, $!r$ cannot step because $r$ is not in $\mu$.
