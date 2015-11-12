@@ -3,7 +3,6 @@ title: Homework 3 CS 231
 author: Joe Cox, Christian Gram Kalhauge
 ...
 
-
 # Assignment 1
 
 We add the following syntax to the simply typed lambda calculus
@@ -106,7 +105,6 @@ If we can not match the first patters, match on the second:
 
 c) Define a judgement $\typematch{p}{T}{\Gamma}$
 
-<<<<<<< HEAD
 The type of the empty pattern is just the type:
 \infrule{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
 
@@ -120,13 +118,7 @@ to add the requirement to the type environment:
 The type of the pair pattern is the union of the two pairs, ant with
 the union of the two type environment. This works because we are
 assuming no reuse of variables.
-=======
-\infrule{}{\typematch{(\_ \typeof T)}{T}{\emptyset}}
-\infrule{}{\typematch{n}{\TInt}{\emptyset}}
 
-\infrule{}{\typematch{(x \typeof T)}{T}{\{(x, T)\}}}
-
->>>>>>> f1b5a50d58e8e209eda0550caf303d5a7051eb2c
 \infrule{
     \typematch{p_1}{T_1}{\Gamma_1} \andalso \typematch{p_2}{T_2}{\Gamma_2}
 }{
