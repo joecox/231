@@ -20,11 +20,13 @@
 
 \newcommand{\typecheck}[3]{#1 \vdash{} #2 \typeof{} #3}
 \newcommand{\typematch}[3]{\vdash{} #1 \typeof{} #2 \Rightarrow{} #3}
+\newcommand{\typeinfr}[4]{#1 \vdash{} #2 \typeof{} #3\ |\ #4}
 
 \newcommand{\infr}[1]{({\textsc{#1}})}
 
 \newcommand{\assign}[2]{(#1, #2)}
 
+\newcommand{\iFresh}[1]{#1\ \text{fresh}}
 
 % Language
 \newcommand{\tTrue}{\mathtt{true}}

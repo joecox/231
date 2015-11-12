@@ -6,6 +6,32 @@ author: Joe Cox, Christian Gram Kalhauge
 
 # Assignment 1
 
+\infrule[I-Left]{
+\iFresh{X} \andalso
+\iFresh{X'} \andalso
+\typeinfr{\Gamma}{t}{T}{C}
+}{
+\typeinfr{\Gamma}{\tLeft{t}}{X}{\{X = \TUnion{T}{X'}\} \cup C}
+}
+
+\infrule[I-Right]{
+\iFresh{X} \andalso
+\iFresh{X'} \andalso
+\typeinfr{\Gamma}{t}{T}{C}
+}{
+\typeinfr{\Gamma}{\tRight{t}}{X}{\{X = \TUnion{X'}{T}\} \cup C}
+}
+
+\infrule[I-Match]{
+\iFresh{X} \andalso
+\iFresh{X'} \andalso
+\typeinfr{\Gamma}{t}{T_1}{C_2} \andalso
+\typeinfr{\Gamma,x:X'}{t_2}{T_2}{C_2} \andalso
+\typeinfr{\Gamma,y:X'}{t_3}{T_3}{C_3}
+}{
+\typeinfr{\Gamma}{(\tMatch{t_1}{x}{t_2}{y}{t_3})}{X}{\{X = T_1, X = T_2, X' = T_1\} \cup C_1 \cup C_2\cup C_3}
+}
+
 # Assignment 2
 
 > Show both the rewritten term $t$, and the type $T$, if they exists:
