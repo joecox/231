@@ -25,11 +25,13 @@ author: Joe Cox, Christian Gram Kalhauge
 \infrule[I-Match]{
 \iFresh{X} \andalso
 \iFresh{X'} \andalso
-\typeinfr{\Gamma}{t}{T_1}{C_2} \andalso
+\iFresh{X''} \andalso
+\typeinfr{\Gamma}{t_1}{T_1}{C_1} \andalso
 \typeinfr{\Gamma,x:X'}{t_2}{T_2}{C_2} \andalso
-\typeinfr{\Gamma,y:X'}{t_3}{T_3}{C_3}
+\typeinfr{\Gamma,y:X''}{t_3}{T_3}{C_3}
 }{
-\typeinfr{\Gamma}{(\tMatch{t_1}{x}{t_2}{y}{t_3})}{X}{\{X = T_1, X = T_2, X' = T_1\} \cup C_1 \cup C_2\cup C_3}
+\typeinfr{\Gamma}{(\tMatch{t_1}{x}{t_2}{y}{t_3})}{X}
+{\{X = T_2, X = T_3, T_1 =\TUnion{X'}{X''}\} \cup C_1 \cup C_2\cup C_3}
 }
 
 # Assignment 2
@@ -46,8 +48,7 @@ b)  \begin{align*}
 	\Gamma =& \emptyset \\
 	t =& \tFunction {x} {(\TForall{X}{\TFun{X}{\TUnit}})} {
 		\tApp
-			{(\tFunction {y} {\TUnit} {\tApp{\tApp{x}{\TBool}}{\tTrue}})}
-			{(\tApp{\tApp {x} {\TUnit}} {\tUnit})}
+			{(\tFunction {y} {\TUnit} {\tApp{\tApp{x}{\TBool}}{\tTrue}})} {(\tApp{\tApp {x} {\TUnit}} {\tUnit})}
 		} \\
 	T =& \TFun{(\TForall{X}{\TFun{X}{\TUnit}})}{\TUnit}
 	\end{align*}
@@ -85,7 +86,7 @@ f)  \begin{align*}
 # Assignment 3
 a)  ~~~ocaml
     let r = ref 41 in
-        let x = r := 42; () in
+        let x = r := 42 in
             !r
     ~~~
 
