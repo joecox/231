@@ -113,6 +113,44 @@ a)  $t = \tLet{r}{\tRef{\tUnit}}{\tFree{r};\tFetch{r}}$
 
 b)  Progress is still uphold.
 
-c)  The modified Preservation theorem is also uphold, but the
-	modification makes it impossible to prove type soundness.
+c)  Counter example:
 
+    \begin{align*}
+        t      =\ & \tFree{(\tFree{l};l)} \\
+        \Sigma =\ & \{ l : Int \}      \\
+        \mu    =\ & \{ l := 0 \}          \\
+        T      =\ & \TUnit                \\
+        t'     =\ & \tFree{l}            \\
+        \mu'   =\ & \emptyset          \\
+    \end{align*}
+
+    First we have to convince ourselves that $t$ typechecks. Using
+    a rule for sequence \infr{T-Seq}, and the facts that 
+    $\typecheck{\emptyset;\{ l : Int \}}{\tFree{l}}{\TUnit}$ and
+    $\typecheck{\emptyset;\{ l : Int \}}{l}{\TRef{\TInt}}$
+    are true we can se that:
+
+    
+    \infrule[T-Seq]{
+        \typecheck{\emptyset;\{ l : Int \}}{\tFree{l}}{\TUnit}
+        \andalso
+        \typecheck{\emptyset;\{ l : Int \}}{l}{\TRef{\TInt}}
+    }{
+        \typecheck{\emptyset;\{ l : Int \}}{\tFree{l};l}{\TRef{\TInt}} 
+    }
+    
+    \infrule[T-Free]{
+        \typecheck{\emptyset;\{ l : Int \}}{\tFree{l};l}{\TRef{\TInt}} 
+    }{
+        \typecheck{\emptyset;\{ l : Int \}}
+        {\tFree{(\tFree{l};l)}}{\TUnit} 
+    }
+
+    Secondly we have to show that $<t | \mu>$ steps, which is does:
+    $<\tFree{(\tFree{l};l)} | \{l := Int\}> \stepsto <\tFree{l}
+    | \emptyset>$  
+
+    And lastly we have to show that $t'$ does not typecheck, under any
+    sigma $\Sigma' \models \mu'$. And that is pretty clear because
+    $\Sigma'$ must be empty like $\mu'$ and $\tFree{l}$, requires $l \in
+    dom(\Sigma')$ to typecheck.
