@@ -71,7 +71,7 @@ d)  \begin{align*}
 
 e)  Clearly not possible, because the $app$ is of type $\TForall{X}{(\ldots)}$ and
 	$app$ expects something of type $\TFun{(\ldots)}{(\ldots)}$ its third argument.
-	Therefore is it not possible to apply $app$ to $app$ as a the third argument.
+	Therefore is it not possible to apply $app$ to $app$ as the third argument.
 
 f)  \begin{align*}
 	\Gamma =& \{ app : \TForall{X}{\TForall{X'}{\TFun{(\TFun{X}{X'})}{\TFun{X}{X'}}}} \} \\
@@ -90,31 +90,29 @@ a)  ~~~ocaml
             !r
     ~~~
 
-    $\texttt{let\ r\ =\ ref\ 41\ in}$\newline
-    $\texttt{let\ r\ =\ \textbf{r\ :=\ !r\ +\ 1;\ 1}\ in}$\newline
-    $\texttt{\ \ !r;;}$
-
 b)  ~~~ocaml
     let r = ref 41 in
         let x = ((function r : Ref Int -> (r := 41; 500)) (r := 42; ref 0)) in
             !r
     ~~~
 
-    $\texttt{let\ r\ =\ ref\ 41\ in}$\newline
-    $\texttt{let\ x\ =\ ((function\ r:Ref\ Int\ ->\ (r\ :=\ 41;\ 500))}$\newline
-    $\texttt{\ \ \ \ \ \ \ \ \ \ \ \textbf{(let\ r2\ =\ ref\ 41\ in\ r\ :=\ !r\ +\ 1;\ r2)})}$\newline
-    $\texttt{\ \ in\ !r;;}$
-
-c) 
-    ~~~ocaml
+c)  ~~~ocaml
     let f = let n = ref 5 in (function x : Unit -> n := !n + 1; !n) in
         (f ()) * (f ())
     ~~~
-    $\texttt{let\ f\ =\ \textbf{(let\ n\ =\ ref\ 5\ in\ function\ x\ ->\ (n\ :=\ !n\ +\ 1;\ !n))}\ in}$\newline
-    $\texttt{\ \ (f\ ())\ *\ (f\ ());;}$
 
 # Assignment 4
 
-a) $t = \tLet{r}{ref\ \tUnit}{free\ r;\ !r}$
+a)  $t = \tLet{r}{\tRef{\tUnit}}{\tFree{r};\tFetch{r}}$
 
-   Because $\typecheck{\emptyset;\emptyset}{r}{\TRef{\TUnit}}$, then $\typecheck{\emptyset;\emptyset}{!r}{\TUnit}$, and $\typecheck{\emptyset;\emptyset}{t}{\TUnit}$.  But $t$ will be eventually stuck because $free\ r$ removes $r$ from $\mu$, but by \infr{E-DerefLoc}, $!r$ cannot step because $r$ is not in $\mu$.
+    Because $\typecheck{\emptyset;\emptyset}{r}{\TRef{\TUnit}}$, then
+    $\typecheck{\emptyset;\emptyset}{!r}{\TUnit}$, and
+    $\typecheck{\emptyset;\emptyset}{t}{\TUnit}$.  But $t$ will be
+    eventually stuck because $free\ r$ removes $r$ from $\mu$, but by
+    \infr{E-DerefLoc}, $!r$ cannot step because $r$ is not in $\mu$.
+
+b)  Progress is still uphold.
+
+c)  The modified Preservation theorem is also uphold, but the
+	modification makes it impossible to prove type soundness.
+
