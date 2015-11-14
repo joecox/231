@@ -111,7 +111,7 @@ a)  $t = \tLet{r}{\tRef{\tUnit}}{\tFree{r};\tFetch{r}}$
     eventually stuck because $free\ r$ removes $r$ from $\mu$, but by
     \infr{E-DerefLoc}, $!r$ cannot step because $r$ is not in $\mu$.
 
-b)  Progress is still uphold.
+b)  Progress is still upheld.
 
 c)  Counter example:
 
@@ -128,7 +128,7 @@ c)  Counter example:
     a rule for sequence \infr{T-Seq}, and the facts that 
     $\typecheck{\emptyset;\{ l : Int \}}{\tFree{l}}{\TUnit}$ and
     $\typecheck{\emptyset;\{ l : Int \}}{l}{\TRef{\TInt}}$
-    are true we can se that:
+    are true we can see that:
 
     
     \infrule[T-Seq]{
@@ -146,7 +146,7 @@ c)  Counter example:
         {\tFree{(\tFree{l};l)}}{\TUnit} 
     }
 
-    Secondly we have to show that $<t | \mu>$ steps, which is does:
+    Secondly we have to show that $<t | \mu>$ steps, which it does:
     $<\tFree{(\tFree{l};l)} | \{l := Int\}> \stepsto <\tFree{l}
     | \emptyset>$  
 
