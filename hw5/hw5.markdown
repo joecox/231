@@ -75,8 +75,9 @@ b)  Show the $\Gamma$ that would be produces after each program point.
 
 a)  $\forall x . \forever \eventually P(x) \lor \eventually T(x)$
 
-b)  It's the same the liveness properties are not dependent on the
-    implementation. But for this implementation, we can give the stronger
-    grantee that everybody will eventually get a token.
+b)  It's the same, as the liveness properties, should not be dependent
+    on the implementation. But for this implementation, we can give the
+    stronger grantee that everybody will eventually get a token if not
+    always on the phone.
 
-    $\forall x . \eventually T(x)$
+    $\forall x . \eventually \forever P(x) \lor \eventually T(x)$
