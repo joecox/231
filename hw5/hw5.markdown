@@ -90,6 +90,22 @@ b) Due to space constraints, we show the typing derivation as a sequence of appl
 
 # Assignment 2
 
+a) $\TPair{(\TFun{\TTop}{\TRef{\TTop}})}{\TBool} \subtypeq \TPair{(\TFun{\TTop}{\TTop})}{\TTop}$
+
+   Yes.
+
+b) $\TFun{({\TRef{\TTop}})}{\TTop} \subtypeq \TFun{\TTop}{\TTop}$
+
+   No, ...
+
+c) $\TRef{\TTop} \subtypeq \TRef{(\TPair{\TTop}{\TTop})}$
+   
+   No, $\tApp{(\tFunction{x}{\TRef{(\TPair{\TTop}{\TTop})}}{\tSnd{\tFetch{x}}})}{\tRef{5}}$.
+
+d) $\TRef{(\TPair{\TTop}{\TTop})} \subtypeq \TRef{\TTop}$
+
+   No, $\tSnd{\tFetch{(\tApp{(\tFunction{x}{\TRef{\TTop}}{x})}{\tRef{5}})}}$
+
 # Assignment 3
 
 # Assignment 4
