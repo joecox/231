@@ -4,6 +4,7 @@
 \usepackage{amsthm}
 \usepackage{cleveref}
 \usepackage{bcprules}
+\usepackage{xparse}
 
 % \usepackage{tgpagella}
 \usepackage[scaled=0.7]{beramono}
@@ -16,17 +17,20 @@
 
 
 % Judgement
-\newcommand{\typeof}{\colon\!\!}
+\newcommand{\typeof}{\colon\!}
 \newcommand{\stepsto}{\longrightarrow}
 \newcommand{\multistep}{\stepsto^{\star}}
 \newcommand{\subterm}{\sqsubset}
 \newcommand{\subderv}{\sqsubset}
+\newcommand{\subtype}{<:}
+\newcommand{\subtypeq}{\stackrel{?}{<:}}
 \newcommand{\matches}[3]{\vdash{} #1\ \mathtt{matches}\ #2 \Rightarrow{} #3}
 \newcommand{\notmatches}[2]{\not\vdash{} #1\ \mathtt{matches}\ #2}
 
 \newcommand{\typecheck}[3]{#1 \vdash{} #2 \typeof{} #3}
 \newcommand{\typematch}[3]{\vdash{} #1 \typeof{} #2 \Rightarrow{} #3}
 \newcommand{\typeinfr}[4]{#1 \vdash{} #2 \typeof{} #3\ |\ #4}
+\newcommand{\typeeffect}[4]{\typecheck{#1}{#2}{#3}\ ; #4}
 
 \newcommand{\infr}[1]{({\textsc{#1}})}
 
@@ -70,6 +74,8 @@
 
 \newcommand{\tAdd}[2]{#1 + #2}
 \newcommand{\tNeg}[1]{-#1}
+\newcommand{\tThrow}{\mathtt{throw}}
+\newcommand{\tTryCatch}[2]{\mathtt{try}\ #1\ \mathtt{catch}\ #2}
 
 % Types
 \newcommand{\TBool}{\mathtt{Bool}}
@@ -78,8 +84,10 @@
 \newcommand{\TUnion}[2]{#1 \lor{} #2}
 \newcommand{\TUnit}{\mathtt{Unit}}
 \newcommand{\TFun}[2]{#1 \rightarrow #2}
+\newcommand{\TFunEffect}[3]{#1 \xrightarrow{#3} #2}
 \newcommand{\TForall}[2]{\forall #1 . #2}
 \newcommand{\TRef}[1]{\mathtt{Ref}\ #1}
+\newcommand{\TTop}{\mathtt{Top}}
 
 \newcommand{\TNeg}[1]{\mathtt{neg}_T\ #1}
 
