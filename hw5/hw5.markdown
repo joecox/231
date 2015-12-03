@@ -114,13 +114,12 @@ d) $\TRef{(\TPair{\TTop}{\TTop})} \subtypeq \TRef{\TTop}$
 
 a)  ~~~
     if (x != null) then
+      [ assert x != null ]
+      [ assert x.f >= 0 && x.f < a.length ]
       n := x.f;
-      [ x != null ]
-      [ x.f < a.length ]
     else
+      [ assert z-1 >= 0 && z-1 < a.length ]
       n := z-1;
-      [ z-1 < a.length ]
-    [ a != null ]
     res := a[n];
     ~~~
 
