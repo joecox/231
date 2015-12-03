@@ -123,6 +123,12 @@ a)  ~~~
     res := a[n];
     ~~~
 
+    ~~~
+    WP(code, n >= 0 && n < a.length) =
+      (x != null => x.f >= 0 && x.f < a.length) &&
+      (x = null => z-1 >= 0 && z-1 < a.length)
+    ~~~
+
 b)  $I = (k \leq n) \land (r = k^2)$
 
 # Assignment 5
