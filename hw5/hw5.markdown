@@ -110,4 +110,18 @@ d) $\TRef{(\TPair{\TTop}{\TTop})} \subtypeq \TRef{\TTop}$
 
 # Assignment 4
 
+a)  ~~~
+    if (x != null) then
+      n := x.f;
+      [ x != null ]
+      [ x.f < a.length ]
+    else
+      n := z-1;
+      [ z-1 < a.length ]
+    [ a != null ]
+    res := a[n];
+    ~~~
+
+b)  $I = (k \leq n) \land (r = k^2)$
+
 # Assignment 5
