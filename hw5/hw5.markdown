@@ -129,6 +129,6 @@ a)  ~~~
       (x = null => z-1 >= 0 && z-1 < a.length)
     ~~~
 
-b)  $I = (k \leq n) \land (r = k^2)$
+b)  $I = (r = k^2 \land s = 2k + 1)$
 
 # Assignment 5
