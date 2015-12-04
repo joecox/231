@@ -193,7 +193,7 @@ a)  We just want to prove `true` in the program, using weakest precondition.
     l4: res := a[n];        // wpl4 = WP(..., true) = a != null && 0 >= n >= a.length
     ~~~
 
-    The entire code have the weakest precondition:
+    The entire code has the weakest precondition:
 
     ~~~
     WP(code, true) = wpl1 =
