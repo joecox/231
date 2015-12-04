@@ -3,7 +3,6 @@ title: Homework 5 CS 231
 author: Joe Cox, Christian Gram Kalhauge
 ...
 
-
 # Assignment 1
 
 a)  Adding effects to the rules:
@@ -36,9 +35,13 @@ a)  Adding effects to the rules:
             {\Phi_1 \cap \Phi_2}
     }
 
-    Our effect for $\infr{T-TryCatch}$ is the intersection of $\Phi_1$ and $\Phi_2$, because the effect is at most $\tEffExn$, but only when the catch block throws an exception, which will only occur if the try block throws an exception.
+    Our effect for $\infr{T-TryCatch}$ is the intersection of $\Phi_1$
+    and $\Phi_2$, because the effect is at most $\tEffExn$, but only
+    when the catch block throws an exception, which will only occur if
+    the try block throws an exception.
 
-b) Due to space constraints, we show the typing derivation as a sequence of applied rules, from the bottom of the tree to the top.
+b)  Due to space constraints, we show the typing derivation as
+    a sequence of applied rules, from the bottom of the tree to the top.
 
     \infrule[T-Var]{
         \emptyset,x\typeof\TBool(x) = \TBool
@@ -92,21 +95,32 @@ b) Due to space constraints, we show the typing derivation as a sequence of appl
 
 # Assignment 2
 
-a) $\TPair{(\TFun{\TTop}{\TRef{\TTop}})}{\TBool} \subtypeq \TPair{(\TFun{\TTop}{\TTop})}{\TTop}$
+a)  $\TPair{(\TFun{\TTop}{\TRef{\TTop}})}{\TBool} \subtypeq \TPair{(\TFun{\TTop}{\TTop})}{\TTop}$
 
-   Yes.
+    Yes.
 
-b) $\TFun{({\TRef{\TTop}})}{\TTop} \subtypeq \TFun{\TTop}{\TTop}$
+b)  $\TFun{({\TRef{\TTop}})}{\TTop} \subtypeq \TFun{\TTop}{\TTop}$
 
-   No, ...
+    No, $\tApp{(\tFunction{x}{\TRef{\TTop}}{\tFetch{x}})}{1}$
 
-c) $\TRef{\TTop} \subtypeq \TRef{(\TPair{\TTop}{\TTop})}$
-   
-   No, $\tSnd{\tFetch{(\tRef{1})}}$.
+c)  $\TRef{\TTop} \subtypeq \TRef{(\TPair{\TTop}{\TTop})}$
 
-d) $\TRef{(\TPair{\TTop}{\TTop})} \subtypeq \TRef{\TTop}$
+    No, $\tSnd{\tFetch{(\tRef{1})}}$.
 
-   No, $\tApp{(\tFunction{x}{\TRef{\TTop}}{\tUpdate{x}{1}})}{\tRef{\tPair{1}{2}}}$
+d)  $\TRef{(\TPair{\TTop}{\TTop})} \subtypeq \TRef{\TTop}$
+
+    No, $$\tLet{x}{
+          \tRef{\tPair{0}{0}}
+        }{
+          \tSeq{
+            \tApp{
+               (\tFunction{y}{\TRef{\TInt}}{\tUpdate{y}{1}})
+             }{x}
+          }{\tSnd{\tFetch{x}}}
+        }
+        $$ 
+           
+
 
 # Assignment 3
 
@@ -149,36 +163,42 @@ a)  Write new type rules for integer constants, addition, and unary
 
 b)  Show the $\Gamma$ that would be produces after each program point.
     ```python
-    x := 8;            
-    if (x > 0)         # G = { x <- 8 Int }
+    x := 8;            # G = { x <- 8 Int }
+    if (x > 0)         
         y := x + x;    # G = { x <- 8 Int, y <- 16 Int }
         x := x + 1;    # G = { x <- 9 Int, y <- 16 Int }
     else               
         y := 0;        # G = { y <- 0 Int, x <- 8 Int }
         x := x + 1;    # G = { x <- 9 Int, y <- 0 Int }
     # Overapproximation, G = { x <- 9 Int, y <- any Int }
-    while (x > 0) do   # G = { x <- any Int, y <- any Int }, Loop invariant 
+    while (x > 0) do   # GFix = { x <- any Int, y <- any Int }
         x := x - 1;    # G = { x <- any Int, y <- any Int }
         y := 5;        # G = { x <- any Int, y <- any Int }
     ```              
 
 # Assignment 4
 
-a)  ~~~
-    if (x != null) then
-      [ assert x != null ]
-      [ assert x.f >= 0 && x.f < a.length ]
-      n := x.f;
-    else
-      [ assert z-1 >= 0 && z-1 < a.length ]
-      n := z-1;
-    res := a[n];
+a)  We just want to prove `true` in the program, using weakest precondition.
+    Where `true` represent that the program is correct. To be able to argue
+    about the preconditions of a term we add implicit assertions above .
+
+    ~~~java
+    l1: if (x != null) then // wpl1 = WP(..., wlp4) = (x != null => wpl2) && (x == null => wlp3)
+          [ assert x != null; ]
+    l2:   n := x.f;         // wpl2 = WP(..., wpl3) = x != null && a != null && 0 >= x.f >= a.length
+        else
+    l3:   n := z-1;         // wpl3 = WP(..., wpl4) = a != null && 0 >= z - 1 >= a.length
+        [ assert a != null ]
+        [ assert 0 >= n >= a.length ]
+    l4: res := a[n];        // wpl4 = WP(..., true) = a != null && 0 >= n >= a.length
     ~~~
 
+    The entire code have the weakest precondition:
+
     ~~~
-    WP(code, n >= 0 && n < a.length) =
-      (x != null => x.f >= 0 && x.f < a.length) &&
-      (x = null => z-1 >= 0 && z-1 < a.length)
+    WP(code, true) = wpl1 =
+        (x != null =>  x != null && a != null && 0 >= x.f >= a.length) && 
+        (x == null => a != null && 0 >= z - 1 >= a.length) &&
     ~~~
 
 b)  $I = (r = k^2 \land s = 2k + 1)$
@@ -189,7 +209,7 @@ a)  $\forall x . \forever \eventually P(x) \lor \eventually T(x)$
 
 b)  It's the same, as the liveness properties, should not be dependent
     on the implementation. But for this implementation, we can give the
-    stronger grantee that everybody will eventually get a token if not
-    always on the phone.
+    stronger guarantee that everybody will eventually get a ticket if not
+    eventually always on the phone.
 
     $\forall x . \eventually \forever P(x) \lor \eventually T(x)$
